@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sequest_app/screens/main_screen.dart';
 
 void main() async {
   runApp(const App());
@@ -16,7 +17,7 @@ class App extends StatelessWidget {
           seedColor: const Color.fromARGB(255, 60, 177, 17),
         ),
       ),
-      home: Scaffold(),
+      home: MainScreen(),
     );
   }
 }
