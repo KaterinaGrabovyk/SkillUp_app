@@ -8,7 +8,12 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sequest')),
+      appBar: AppBar(
+        title: Text('Sequest'),
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.info)),
+        ],
+      ),
       drawer: MainDrawer(),
       body: Center(
         child: Column(
