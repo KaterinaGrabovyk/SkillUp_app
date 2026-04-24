@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:sequest_app/data/base_data.dart';
+import 'package:sequest_app/widgets/hobby_input.dart';
 
 class GenerationOptions extends StatefulWidget {
-  GenerationOptions({
+  const GenerationOptions({
     super.key,
     required this.theme,
     required this.colorScheme,
     required this.onTopicChanged,
+    required this.onHobbyChanged,
   });
   final ThemeData theme;
   final ColorScheme colorScheme;
   final Function(String) onTopicChanged;
+  final Function(String) onHobbyChanged;
   @override
   State<GenerationOptions> createState() =>
       _GenerationOptionsState();
@@ -22,7 +25,7 @@ class _GenerationOptionsState extends State<GenerationOptions> {
   final Map<String, List<String>> _disciplineMap = {
     'all': ['Алгебра', 'Геометрія', 'Математика'],
     'low': ['Математика'],
-    'middle': ['Алгебра', 'Геометрія'],
+    'middle': ['Математика'],
     'high': ['Алгебра', 'Геометрія'],
   };
   final List<int> _schoolClasses = List.generate(
@@ -32,7 +35,7 @@ class _GenerationOptionsState extends State<GenerationOptions> {
   List<String> get _schoolDisciplines {
     if (_selectedClass == 0) return _disciplineMap['all']!;
     if (_selectedClass <= 4) return _disciplineMap['low']!;
-    if (_selectedClass <= 9) return _disciplineMap['middle']!;
+    if (_selectedClass <= 6) return _disciplineMap['middle']!;
     return _disciplineMap['high']!;
   }
 
@@ -130,7 +133,6 @@ class _GenerationOptionsState extends State<GenerationOptions> {
             ),
           ],
         ),
-        SizedBox(height: 40),
         Autocomplete<String>(
           optionsBuilder: (TextEditingValue textEdVal) {
             if (textEdVal.text == '') {
@@ -152,7 +154,7 @@ class _GenerationOptionsState extends State<GenerationOptions> {
                   focusNode: focusNode,
                   maxLength: 60,
                   onSaved: (value) {
-                    widget.onTopicChanged(value ?? '');
+                    widget.onTopicChanged(value!);
                     onFieldSubmitted();
                   },
                   validator: (value) {
@@ -170,8 +172,18 @@ class _GenerationOptionsState extends State<GenerationOptions> {
                   cursorColor: widget.colorScheme.onPrimary,
 
                   decoration: InputDecoration(
-                    labelText: 'Введіть Тему...',
-
+                    labelText: 'Тема',
+                    suffix: IconButton(
+                      onPressed: () {
+                        textEditingController.clear();
+                        widget.onTopicChanged('');
+                      },
+                      icon: Icon(Icons.cancel),
+                      style: IconButton.styleFrom(
+                        foregroundColor: widget.colorScheme.error,
+                        padding: EdgeInsets.all(0),
+                      ),
+                    ),
                     counterStyle: TextStyle(
                       color: widget.colorScheme.onPrimary,
                     ),
@@ -191,6 +203,10 @@ class _GenerationOptionsState extends State<GenerationOptions> {
                   ),
                 );
               },
+        ),
+        HobbyInput(
+          colorScheme: widget.colorScheme,
+          onHobbyChanged: (hobby) => widget.onHobbyChanged(hobby),
         ),
       ],
     );
