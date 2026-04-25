@@ -9,18 +9,36 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sequest'),
+        title: Text(
+          'Sequest',
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+          ),
+        ),
+        backgroundColor: Theme.of(
+          context,
+        ).colorScheme.primaryContainer,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.info)),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.info,
+              color: Theme.of(
+                context,
+              ).colorScheme.onPrimaryContainer,
+            ),
+          ),
         ],
       ),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.primaryContainer,
       drawer: MainDrawer(),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Result(),
-
             Expanded(child: TaskOptions()),
           ],
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sequest_app/widgets/hobby_input.dart';
+import 'package:sequest_app/data/base_data.dart';
+import 'package:sequest_app/widgets/input_with_autocomplete.dart';
 
 class AdaptationOptions extends StatefulWidget {
   const AdaptationOptions({super.key, required this.colorScheme});
@@ -17,9 +18,11 @@ class _AdaptationOptionsState extends State<AdaptationOptions> {
     return Column(
       children: [
         Text('Adaptation options...'),
-        HobbyInput(
-          colorScheme: widget.colorScheme,
-          onHobbyChanged: (hobby) => _selectedHobby = hobby,
+        InputWithAutocomplete(
+          inputText: 'Гоббі/Інтерес',
+          autocomleteItemsList: baseHobbyList,
+          onSelectedParam: (d) {},
+          inputColor: widget.colorScheme.onPrimary,
         ),
       ],
     );

@@ -1,58 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sequest_app/Providers/groq_provider.dart';
 import 'package:sequest_app/widgets/adaptation_options.dart';
 import 'package:sequest_app/widgets/generation_options.dart';
-import 'package:groq_sdk/groq_sdk.dart';
 
-class TaskOptions extends StatefulWidget {
+class TaskOptions extends ConsumerStatefulWidget {
   const TaskOptions({super.key});
-
   @override
-  State<TaskOptions> createState() => _TaskOptionsState();
+  ConsumerState<TaskOptions> createState() => _TaskOptionsState();
 }
 
-class _TaskOptionsState extends State<TaskOptions> {
+class _TaskOptionsState extends ConsumerState<TaskOptions> {
   int _groupValue = 0;
   final _formKey = GlobalKey<FormState>();
   var _selectedTopic = '';
   var _selectedHobby = '';
-
   void _sendPrompt() async {
     final isValid = _formKey.currentState!.validate();
-
     if (!isValid) {
       return;
     }
     _formKey.currentState!.save();
-    final apiKey = dotenv.get('GROQ_API_KEY');
 
-    try {
-      final groq = Groq(apiKey);
-      if (!await groq.canUseModel(
-        GroqModels.llama33_70b_versatile,
-      )) {
-        return;
-      }
-      final chat = groq.startNewChat(
-        GroqModels.llama33_70b_versatile,
-      );
-      final (response, usage) = await chat.sendMessage(
-        'return only false',
-      );
-      print(response.choices.first.message);
-    } on GroqException catch (error) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('ERROR: ${error.error}')),
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    ref
+        .read(groqResponseProvider.notifier)
+        .generateProblem(_selectedTopic, _selectedHobby);
   }
 
   @override
@@ -93,7 +66,6 @@ class _TaskOptionsState extends State<TaskOptions> {
                 children: [
                   _groupValue == 0
                       ? GenerationOptions(
-                          theme: theme,
                           colorScheme: colorScheme,
                           onTopicChanged: (value) {
                             _selectedTopic = value;
