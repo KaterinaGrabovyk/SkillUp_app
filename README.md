@@ -1,4 +1,4 @@
-# sequest_app
+# skill_up_app
 
 A new Flutter project.
 

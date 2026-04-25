@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sequest_app/data/base_data.dart';
-import 'package:sequest_app/widgets/input_with_autocomplete.dart';
+import 'package:skill_up_app/data/base_data.dart';
+import 'package:skill_up_app/widgets/input_with_autocomplete.dart';
 
 class GenerationOptions extends StatefulWidget {
   const GenerationOptions({

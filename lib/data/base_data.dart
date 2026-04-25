@@ -1,4 +1,4 @@
-import 'package:sequest_app/models/topics.dart';
+import 'package:skill_up_app/models/topics.dart';
 
 final List<SchoolClass> schoolProgram = [
   // 1 КЛАС

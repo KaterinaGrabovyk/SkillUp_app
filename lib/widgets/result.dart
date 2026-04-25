@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sequest_app/Providers/groq_provider.dart';
+import 'package:skill_up_app/Providers/groq_provider.dart';
 
 class Result extends ConsumerWidget {
   const Result({super.key});

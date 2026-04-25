@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sequest_app/Providers/groq_provider.dart';
-import 'package:sequest_app/widgets/adaptation_options.dart';
-import 'package:sequest_app/widgets/generation_options.dart';
+import 'package:skill_up_app/Providers/groq_provider.dart';
+import 'package:skill_up_app/widgets/adaptation_options.dart';
+import 'package:skill_up_app/widgets/generation_options.dart';
 
 class TaskOptions extends ConsumerStatefulWidget {
   const TaskOptions({super.key});

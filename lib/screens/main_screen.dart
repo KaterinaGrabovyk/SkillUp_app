@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sequest_app/widgets/main_drawer.dart';
-import 'package:sequest_app/widgets/result.dart';
-import 'package:sequest_app/widgets/task_options.dart';
+import 'package:skill_up_app/widgets/main_drawer.dart';
+import 'package:skill_up_app/widgets/result.dart';
+import 'package:skill_up_app/widgets/task_options.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
