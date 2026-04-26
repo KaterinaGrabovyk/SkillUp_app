@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skill_up_app/data/base_data.dart';
-import 'package:skill_up_app/widgets/input_with_autocomplete.dart';
+import 'package:skill_up_app/widgets/options_widgets/input_with_autocomplete.dart';
 
 class AdaptationOptions extends StatefulWidget {
   const AdaptationOptions({super.key, required this.colorScheme});

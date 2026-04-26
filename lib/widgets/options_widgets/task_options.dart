@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skill_up_app/Providers/groq_provider.dart';
-import 'package:skill_up_app/widgets/adaptation_options.dart';
-import 'package:skill_up_app/widgets/generation_options.dart';
+import 'package:skill_up_app/Providers/user_data_provider.dart';
+import 'package:skill_up_app/data/base_data.dart';
+import 'package:skill_up_app/widgets/options_widgets/adaptation_options.dart';
+import 'package:skill_up_app/widgets/options_widgets/generation_options.dart';
 
 class TaskOptions extends ConsumerStatefulWidget {
   const TaskOptions({super.key});
@@ -16,26 +18,83 @@ class _TaskOptionsState extends ConsumerState<TaskOptions> {
   final _formKey = GlobalKey<FormState>();
   var _selectedTopic = '';
   var _selectedHobby = '';
+  bool isSending = false;
   void _sendPrompt() async {
+    setState(() {
+      isSending = true;
+    });
+
+    FocusScope.of(context).unfocus();
     final isValid = _formKey.currentState!.validate();
     if (!isValid) {
+      setState(() {
+        isSending = false;
+      });
+
       return;
     }
     _formKey.currentState!.save();
 
-    ref
+    await ref
         .read(groqResponseProvider.notifier)
         .generateProblem(_selectedTopic, _selectedHobby);
+    final task = ref.read(groqResponseProvider);
+    if (!task.startsWith('Помилка:') && task != 'loading') {
+      ref.read(userDataProvider('tasks').notifier).addItem(task);
+      _addUserParams();
+      _selectedTopic = '';
+      _selectedHobby = '';
+    }
+
+    setState(() {
+      isSending = false;
+    });
+  }
+
+  void _addUserParams() {
+    final allTopics = [
+      ...schoolProgram
+          .expand((c) => c.disciplines)
+          .expand((d) => d.topics)
+          .map((topic) => topic.title),
+      ...ref
+          .watch(userDataProvider('topics'))
+          .map((item) => item['title'] as String),
+    ];
+    final allHobbies = [
+      ...baseHobbyList,
+      ...ref
+          .watch(userDataProvider('hobbies'))
+          .map((item) => item['title'] as String),
+    ];
+    if (!allTopics.contains(_selectedTopic)) {
+      ref
+          .read(userDataProvider('topics').notifier)
+          .addItem(_selectedTopic);
+    }
+    if (!allHobbies.contains(_selectedHobby)) {
+      ref
+          .read(userDataProvider('hobbies').notifier)
+          .addItem(_selectedHobby);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    final segmentTextStyle = theme.textTheme.bodyLarge?.copyWith(
-      color: colorScheme.onTertiary,
-    );
+    final userTopics = ref
+        .watch(userDataProvider('topics'))
+        .map((item) => item['title'] as String)
+        .toList();
+    final allHobbies = [
+      ...baseHobbyList,
+      ...ref
+          .watch(userDataProvider('hobbies'))
+          .map((item) => item['title'] as String),
+    ];
+    final colorScheme = Theme.of(context).colorScheme;
+    final segmentTextStyle = Theme.of(
+      context,
+    ).textTheme.bodyLarge?.copyWith(color: colorScheme.onTertiary);
 
     return Container(
       decoration: BoxDecoration(
@@ -67,6 +126,8 @@ class _TaskOptionsState extends ConsumerState<TaskOptions> {
                   _groupValue == 0
                       ? GenerationOptions(
                           colorScheme: colorScheme,
+                          userTopics: userTopics,
+                          allHobbies: allHobbies,
                           onTopicChanged: (value) {
                             _selectedTopic = value;
                           },
@@ -82,8 +143,10 @@ class _TaskOptionsState extends ConsumerState<TaskOptions> {
                         MainAxisAlignment.spaceAround,
                     children: [
                       ElevatedButton(
-                        onPressed: _sendPrompt,
-                        child: Text('Надіслати'),
+                        onPressed: isSending ? () {} : _sendPrompt,
+                        child: isSending
+                            ? CircularProgressIndicator()
+                            : Text('Надіслати'),
                       ),
                     ],
                   ),

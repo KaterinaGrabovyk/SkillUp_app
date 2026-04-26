@@ -5,16 +5,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class GroqProvider extends StateNotifier<String> {
   GroqProvider() : super('');
   GroqChat? _activeChat;
-  Future<void> generateProblem(
-  
-    String topic,
-    String hobby,
-  ) async {
+  Future<void> generateProblem(String topic, String hobby) async {
     final prompt =
         'Перевір наступні параметри: Тема: $topic; Інтерес/Гоббі:$hobby ;'
-        'Якщо параметри не відповідають своїм назвам, поверни ЛИШЕ наступний текст:"Задана Тема чи Гоббі є некоректними";'
-        'Інакше згенеруй унікальну задачу на вказану тему, адаптовану під гоббі, та поверни ЛИШЕ умову.';
-
+        'Якщо параметри не відповідають своїм назвам, поверни ЛИШЕ наступний текст:"Помилка:Задана Тема чи Гоббі є некоректними";'
+        'Інакше згенеруй унікальну задачу УКРАЇНСЬКОЮ мовою, без слів інших мов, на вказану тему, адаптовану під гоббі, та поверни ЛИШЕ умову.';
+    state = 'loading';
     try {
       if (_activeChat == null) {
         final apiKey = dotenv.get('GROQ_API_KEY');

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:skill_up_app/screens/about.dart';
 import 'package:skill_up_app/widgets/main_drawer.dart';
 import 'package:skill_up_app/widgets/result.dart';
-import 'package:skill_up_app/widgets/task_options.dart';
+import 'package:skill_up_app/widgets/options_widgets/task_options.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -9,18 +10,17 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Sequest',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
-          ),
-        ),
         backgroundColor: Theme.of(
           context,
         ).colorScheme.primaryContainer,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (ctx) => AboutScreen(),
+              );
+            },
             icon: Icon(
               Icons.info,
               color: Theme.of(
@@ -30,17 +30,17 @@ class MainScreen extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: Theme.of(
-        context,
-      ).colorScheme.primaryContainer,
       drawer: MainDrawer(),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Result(),
-            Expanded(child: TaskOptions()),
-          ],
+      body: Container(
+        color: Theme.of(context).colorScheme.primaryContainer,
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Result(),
+              Expanded(child: TaskOptions()),
+            ],
+          ),
         ),
       ),
     );

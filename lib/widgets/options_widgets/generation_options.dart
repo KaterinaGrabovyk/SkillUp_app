@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skill_up_app/data/base_data.dart';
-import 'package:skill_up_app/widgets/input_with_autocomplete.dart';
+import 'package:skill_up_app/widgets/options_widgets/input_with_autocomplete.dart';
 
-class GenerationOptions extends StatefulWidget {
+class GenerationOptions extends ConsumerStatefulWidget {
   const GenerationOptions({
     super.key,
     required this.colorScheme,
+    required this.userTopics,
+    required this.allHobbies,
     required this.onTopicChanged,
     required this.onHobbyChanged,
   });
   final ColorScheme colorScheme;
+  final List<String> userTopics;
+  final List<String> allHobbies;
   final Function(String) onTopicChanged;
   final Function(String) onHobbyChanged;
   @override
-  State<GenerationOptions> createState() =>
+  ConsumerState<GenerationOptions> createState() =>
       _GenerationOptionsState();
 }
 
-class _GenerationOptionsState extends State<GenerationOptions> {
+class _GenerationOptionsState
+    extends ConsumerState<GenerationOptions> {
   int _selectedClass = 0;
   String _selectedDiscipline = '';
   final Map<String, List<String>> _disciplineMap = {
@@ -37,7 +43,7 @@ class _GenerationOptionsState extends State<GenerationOptions> {
     return _disciplineMap['high']!;
   }
 
-  List<String> get _allSchoolTopics {
+  List<String> get _allTopics {
     if (_selectedDiscipline != '') {
       if (_selectedClass != 0) {
         return schoolProgram
@@ -54,12 +60,22 @@ class _GenerationOptionsState extends State<GenerationOptions> {
             .map((topic) => topic.title)
             .toList();
       }
+      return schoolProgram
+          .expand((c) => c.disciplines)
+          .where(
+            (schoolDisc) => schoolDisc.title == _selectedDiscipline,
+          )
+          .expand((d) => d.topics)
+          .map((topic) => topic.title)
+          .toList();
     }
-    return schoolProgram
-        .expand((c) => c.disciplines)
-        .expand((d) => d.topics)
-        .map((topic) => topic.title)
-        .toList();
+    return [
+      ...schoolProgram
+          .expand((c) => c.disciplines)
+          .expand((d) => d.topics)
+          .map((topic) => topic.title),
+      ...widget.userTopics,
+    ];
   }
 
   @override
@@ -132,14 +148,17 @@ class _GenerationOptionsState extends State<GenerationOptions> {
           ],
         ),
         InputWithAutocomplete(
+          key: ValueKey(
+            'topic-$_selectedClass-$_selectedDiscipline',
+          ),
           inputText: 'Тема',
-          autocomleteItemsList: _allSchoolTopics,
+          autocomleteItemsList: _allTopics,
           onSelectedParam: widget.onTopicChanged,
           inputColor: widget.colorScheme.onTertiary,
         ),
         InputWithAutocomplete(
           inputText: 'Гоббі/Інтерес',
-          autocomleteItemsList: baseHobbyList,
+          autocomleteItemsList: widget.allHobbies,
           onSelectedParam: widget.onHobbyChanged,
           inputColor: widget.colorScheme.onTertiary,
         ),

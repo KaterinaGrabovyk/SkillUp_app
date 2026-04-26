@@ -7,29 +7,51 @@ class Result extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String result = 'Ще не має задачі, згенеруйте нову!';
-    if (ref.watch(groqResponseProvider).isNotEmpty) {
-      result = ref.watch(groqResponseProvider);
-    }
-    return Container(
-      height: 250,
-      width: double.infinity,
-      margin: EdgeInsets.all(20),
-      padding: EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
-        border: Border.symmetric(),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: SingleChildScrollView(
+    final response = ref.watch(groqResponseProvider);
+    
+    // Визначаємо контент залежно від стану
+    Widget content;
+
+    if (response == 'loading') {
+      content = const Center(
+        child: CircularProgressIndicator(
+          color: Colors.white,
+        ),
+      );
+    } else if (response.isEmpty) {
+      content = const Text(
+        'Ще не має задачі, згенеруйте нову!',
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.white),
+      );
+    } else {
+      content = SingleChildScrollView(
         child: Text(
-          result,
+          response,
           style: TextStyle(
             color: Theme.of(context).colorScheme.onPrimary,
           ),
         ),
+      );
+    }
+
+    return Container(
+      height: 250,
+      width: double.infinity,
+      margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
+      child: content, // Вставляємо підготовлений контент
     );
   }
 }
-//ref.watch(groqResponseProvider)
