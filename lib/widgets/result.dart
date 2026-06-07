@@ -21,7 +21,7 @@ class Result extends ConsumerWidget {
       );
     } else if (response.isEmpty) {
       content = Text(
-        'Ще не має задачі, згенеруйте нову!',
+        'Ще немає задачі, згенеруйте нову!',
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Theme.of(context).colorScheme.onPrimary,

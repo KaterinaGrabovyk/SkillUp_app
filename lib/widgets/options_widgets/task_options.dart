@@ -98,7 +98,7 @@ class _TaskOptionsState extends ConsumerState<TaskOptions> {
           .watch(userDataProvider('hobbies'))
           .map((item) => item['title'] as String),
     ];
-    if (!allTopics.contains(_selectedTopic)) {
+    if (!allTopics.contains(_selectedTopic) && !_isAdapation) {
       ref
           .read(userDataProvider('topics').notifier)
           .addItem(_selectedTopic);
